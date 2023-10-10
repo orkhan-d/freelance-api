@@ -11,5 +11,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout']);
 Route::get('/ping', [Controller::class, 'ping']);
+
+Route::middleware(\App\Http\Middleware\AuthCheck::class) -> group(
+    function() {
+        Route::post('/logout', [UserController::class, 'logout']);
+        Route::get('/auth', [UserController::class, 'get']);
+        //Route::patch('/users/{user:id}/profile', [UserController::class, 'fill']);
+    }
+);

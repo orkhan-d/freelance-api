@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AuthUserInfo;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Dimensions;
+use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
@@ -55,7 +58,7 @@ class UserController extends Controller
                 ]
             ], 422);
         }
-        $user = User::where('email', $request->get('email'));
+        $user = User::firstWhere('email', $request->get('email'));
         if(is_null($user)){
             return response([
                 'error'=>[
@@ -84,9 +87,24 @@ class UserController extends Controller
         );
     }
 
+    public function get(Request $request)
+    {
+        $user = auth()->user();
+        return response()->json(AuthUserInfo::make($user));
+    }
+
     public function logout(Request $request)
     {
-        $user = User::where('token', $request->bearerToken())->first();
+        $token = $request->bearerToken();
+        if(is_null($token)){
+            return response([
+                'error'=>[
+                    'code'=>401,
+                    'message'=>'Not Authorized!'
+                ]
+            ], 401);
+        }
+        $user = User::where('token', $token)->first();
 
         if(is_null($user)){
             return response([
@@ -102,5 +120,52 @@ class UserController extends Controller
             ]);
             return response(null);
         }
+    }
+
+    public function fill(User $user, Request $request)
+    {
+        $contacts = request('contacts');
+        if(!is_null($contacts))
+            for ($i = 0; $i < count($contacts); $i++) {
+                $v = \validator(request()->all(), [
+                    "contacts.$i.link"=>'url:http,https',
+                    "contacts.$i.name"=>'string',
+                ]);
+                if($v->fails()){
+                    return response()->error($v->errors(), 422);
+                }
+            }
+
+
+        $v = validator(request()->all(), [
+            "avatar" => 'file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=300,max_height=300',
+            "description"=>'string',
+            'experience'=>'integer',
+            'age'=>'integer',
+        ]);
+
+        if($v->fails()){
+            return response()->error($v->errors(), 422);
+        }
+
+        if (!is_null($request->file('avatar'))){
+            $s = Str::random(10);
+            $filename = $s . $request->file('avatar')->getExtension();
+            $request->file('avatar')->move(base_path('uploads'), $filename);
+        }
+
+        $auser = auth()->user();
+        if (is_null($auser) || $user->id!=$auser->id){
+            response()->error("You are not have permission", 403);
+        }
+        $user->update([
+            'description'=>$request->description,
+            'avatar'=>$request->avatar,
+            'experience'=>$request->experience,
+            'age'=>$request->age,
+        ]);
+        return response()->json([
+            'status'=>'success'
+        ], 200);
     }
 }

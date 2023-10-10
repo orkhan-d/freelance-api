@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('surname');
+            $table->longText('description')->nullable();
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('avatar')->nullable();
+            $table->integer('experience')->nullable();
+            $table->integer('age')->nullable();
             $table->string('token')->nullable();
 //            $table->integer('role_id');
             $table->foreignId('role_id')->constrained('roles');
