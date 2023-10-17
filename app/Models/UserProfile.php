@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserProfile extends Model
 {
-    use HasFactory;
+    protected $guarded = false;
+
+    public function tags()
+    {
+        return $this->BelongsToMany(tags::class, 'usertags', 'user_id', 'tag_id');
+    }
 }

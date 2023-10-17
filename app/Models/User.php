@@ -13,8 +13,5 @@ class User extends Authenticatable
     protected $guarded = false;
     public $timestamps = true;
 
-    public function tags()
-    {
-        return $this->BelongsToMany(tags::class, 'usertags', 'user_id', 'tag_id');
-    }
+
 }
