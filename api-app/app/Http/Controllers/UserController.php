@@ -124,46 +124,33 @@ class UserController extends Controller
 
     public function fill(User $user, Request $request)
     {
-        $contacts = request('contacts');
-        if(!is_null($contacts))
-            for ($i = 0; $i < count($contacts); $i++) {
-                $v = \validator(request()->all(), [
-                    "contacts.$i.link"=>'url:http,https',
-                    "contacts.$i.name"=>'string',
-                ]);
-                if($v->fails()){
-                    return response()->error($v->errors(), 422);
-                }
-            }
+        $data = $request->all();
 
-
-        $v = validator(request()->all(), [
+        $v = validator($data, [
             "avatar" => 'file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=300,max_height=300',
             "description"=>'string',
-            'experience'=>'integer',
-            'age'=>'integer',
+            'tags.*'=>'string'
         ]);
 
         if($v->fails()){
             return response()->error($v->errors(), 422);
         }
 
-        if (!is_null($request->file('avatar'))){
-            $s = Str::random(10);
-            $filename = $s . $request->file('avatar')->getExtension();
-            $request->file('avatar')->move(base_path('uploads'), $filename);
-        }
-
         $auser = auth()->user();
         if (is_null($auser) || $user->id!=$auser->id){
             response()->error("You are not have permission", 403);
         }
-        $user->update([
-            'description'=>$request->description,
-            'avatar'=>$request->avatar,
-            'experience'=>$request->experience,
-            'age'=>$request->age,
-        ]);
+
+        if (!is_null($request->file('avatar'))){
+            $s = Str::random(10);
+            $filename = $s . $request->file('avatar')->getExtension();
+            $request->file('avatar')->move(base_path('uploads'), $filename);
+            $user->update([
+                'description'=>$request->get('description'),
+                'avatar'=>'uploads/' . $filename
+            ]);
+        }
+
         return response()->json([
             'status'=>'success'
         ], 200);
