@@ -7,5 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    use HasFactory;
+    protected $guarded = false;
+
+    public function tags()
+    {
+        return $this->BelongsToMany(tags::class, 'service_tags', 'service_id', 'tag_id');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(ServicePhoto::class);
+    }
 }
