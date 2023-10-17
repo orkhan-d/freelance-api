@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('usertags', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('userId')->references('id')->on('users');
-            $table->foreignId('tagId')->references('id')->on('tags');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('tag_id')->constrained('tags');
             $table->timestamps();
         });
     }

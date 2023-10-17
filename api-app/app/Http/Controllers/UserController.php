@@ -150,6 +150,7 @@ class UserController extends Controller
                 'avatar'=>'uploads/' . $filename
             ]);
         }
+        $user->tags()->sync($data['tags']);
 
         return response()->json([
             'status'=>'success'

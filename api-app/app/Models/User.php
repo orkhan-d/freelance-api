@@ -13,8 +13,8 @@ class User extends Authenticatable
     protected $guarded = false;
     public $timestamps = true;
 
-    public function get_tags()
-    {
-        return $this->belongsToMany(UserTags::class, 'usertags', 'userId', '')
-    }
+//    public function tags()
+//    {
+//        return $this->hasMany(tags::class);
+//    }
 }

@@ -17,6 +17,6 @@ Route::middleware(\App\Http\Middleware\AuthCheck::class) -> group(
     function() {
         Route::post('/logout', [UserController::class, 'logout']);
         Route::get('/auth', [UserController::class, 'get']);
-        //Route::patch('/users/{user:id}/profile', [UserController::class, 'fill']);
+        Route::patch('/users/{user:id}/profile', [UserController::class, 'fill']);
     }
 );
