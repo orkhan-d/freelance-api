@@ -14,12 +14,12 @@ class UserProfileController extends Controller
         $data = $request->all();
 
         $v = validator($data, [
-            "avatar" => 'file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=1200,max_height=1200',
-            "description"=>'string',
-            'tags.*'=>'string'
+            "avatar" => 'nullable|file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=1200,max_height=1200',
+            "description"=>'nullable|string',
+            'tags.*'=>'nullable|string'
         ]);
 
-        if ($v->fails()){
+        if ($v->fails()) {
             return response()->error($v->errors(), 422);
         }
 
