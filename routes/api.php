@@ -21,7 +21,7 @@ Route::middleware(AuthCheck::class) -> group(
     function() {
         Route::post('/logout', [UserController::class, 'logout']);
         Route::get('/auth', [UserController::class, 'get']);
-        Route::patch('/users/{user:id}/profile', [UserProfileController::class, 'fill'])
+        Route::post('/users/{user:id}/profile', [UserProfileController::class, 'fill'])
             ->missing(fn() => response()->error('Not found', 404));
         Route::get('/users/{user:id}/profile', [UserProfileController::class, 'get'])
             ->missing(fn() => response()->error('Not found', 404));;

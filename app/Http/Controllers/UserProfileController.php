@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\AuthUserInfo;
 use App\Http\Resources\UserProfileResource;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
@@ -15,12 +14,12 @@ class UserProfileController extends Controller
         $data = $request->all();
 
         $v = validator($data, [
-            "avatar" => 'file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=300,max_height=300',
+            "avatar" => 'file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=1200,max_height=1200',
             "description"=>'string',
             'tags.*'=>'string'
         ]);
 
-        if($v->fails()){
+        if ($v->fails()){
             return response()->error($v->errors(), 422);
         }
 
@@ -31,10 +30,10 @@ class UserProfileController extends Controller
 
         if (!is_null($request->file('avatar'))){
             $s = Str::random(10);
-            $filename = $s . $request->file('avatar')->getExtension();
-            $request->file('avatar')->move(base_path('uploads'), $filename);
+            $filename = $s . '.' .$request->file('avatar')->getClientOriginalExtension();
+            $request->file('avatar')->move(public_path('uploads'), $filename);
             $user->update([
-                'avatar'=>'uploads/' . $filename
+                'avatar'=>'public/uploads/' . $filename
             ]);
         }
 
