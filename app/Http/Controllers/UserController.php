@@ -98,16 +98,7 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->bearerToken();
-        if(is_null($token)){
-            return response([
-                'error'=>[
-                    'code'=>401,
-                    'message'=>'Not Authorized!'
-                ]
-            ], 401);
-        }
-        $user = User::where('token', $token)->first();
+        $user = auth()->user();
 
         if(is_null($user)){
             return response([

@@ -15,6 +15,8 @@ class AuthUserInfo extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            // TODO: добавил айдишник
+            'id' => $this->id,
             'name' => $this->name,
             'lastName' => $this->name . ' ' . $this->surname,
             'role' => $this->role_id,

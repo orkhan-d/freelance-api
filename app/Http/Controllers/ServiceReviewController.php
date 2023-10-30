@@ -12,7 +12,7 @@ class ServiceReviewController extends Controller
     public function create(Service $service, Request $request)
     {
         $user = auth()->user();
-        if ($user->role_id!=0){
+        if ($user->role_id !== 0){
             return response()->error("You don't have permissions!", 403);
         }
 

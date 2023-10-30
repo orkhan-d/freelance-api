@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AuthCheck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -16,7 +17,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/ping', [Controller::class, 'ping']);
 
-Route::middleware(\App\Http\Middleware\AuthCheck::class) -> group(
+Route::middleware(AuthCheck::class) -> group(
     function() {
         Route::post('/logout', [UserController::class, 'logout']);
         Route::get('/auth', [UserController::class, 'get']);
