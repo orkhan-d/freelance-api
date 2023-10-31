@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserProfileResource;
+use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class UserProfileController extends Controller
 {
-    public function fill(UserProfile $user, Request $request)
+    public function fill(Request $request)
     {
         $data = $request->all();
-
         $v = validator($data, [
-            "avatar" => 'nullable|file|max:1024|mimes:jpeg,jpg,png|dimensions:max_width=1200,max_height=1200',
             "description"=>'nullable|string',
             'tags.*'=>'nullable|string'
         ]);
@@ -23,32 +22,52 @@ class UserProfileController extends Controller
             return response()->error($v->errors(), 422);
         }
 
-        $auser = auth()->user();
-        if (is_null($auser) || $user->id!=$auser->id){
-            response()->error("You are not have permission", 403);
-        }
+        $profile = auth()->user()->profile;
 
-        if (!is_null($request->file('avatar'))){
-            $s = Str::random(10);
-            $filename = $s . '.' .$request->file('avatar')->getClientOriginalExtension();
-            $request->file('avatar')->move(public_path('uploads'), $filename);
-            $user->update([
-                'avatar'=>'public/uploads/' . $filename
-            ]);
-        }
-
-        $user->update([
-            'description'=>$request['description'],
+        $profile->update([
+            'description'=>$data['description'],
         ]);
-        $user->tags()->sync($request['tags']);
+
+        $profile->tags()->sync($data['tags']);
 
         return response()->json([
             'status'=>'success'
-        ], 200);
+        ]);
     }
 
-    public function get(UserProfile $user)
+    public function updateAvatar()
     {
-        return response()->json(UserProfileResource::make($user));
+        $data = request()->all();
+
+        $v = validator($data, [
+            "avatar" => 'nullable|file|max:1024|mimes:jpeg,jpg,png',
+        ]);
+
+        if ($v->fails()) {
+            return response()->error($v->errors(), 422);
+        }
+
+        $user = auth()->user();
+
+        $url = '';
+
+        if (!is_null(request()->file('avatar'))) {
+            $s = Str::random(10);
+            $filename = $s . '.' .request()->file('avatar')->getClientOriginalExtension();
+            request()->file('avatar')->move(public_path('uploads'), $filename);
+            $url = 'public/uploads/' . $filename;
+            $user->profile->update([
+                'avatar' => $url
+            ]);
+        }
+
+        return response()->json([
+            'url' => $url,
+        ]);
+    }
+
+    public function get(User $user)
+    {
+        return response()->json(UserProfileResource::make($user->profile));
     }
 }

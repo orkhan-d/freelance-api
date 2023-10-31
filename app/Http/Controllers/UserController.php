@@ -42,7 +42,7 @@ class UserController extends Controller
         }
         $uuid = Str::uuid();
         $user = User::create($data + ['token'=>$uuid]);
-        $profile = UserProfile::create(['id'=>$user->id]);
+        $profile = UserProfile::create(['user_id' => $user->id]);
         return response([
             'token'=>$uuid
         ], 201);

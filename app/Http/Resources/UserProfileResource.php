@@ -14,7 +14,6 @@ class UserProfileResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-//        dd($this->tags());
         return [
             'avatar' => $this->avatar,
             'description' => $this->description,

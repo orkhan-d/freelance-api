@@ -13,5 +13,8 @@ class User extends Authenticatable
     protected $guarded = false;
     public $timestamps = true;
 
-
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
 }
