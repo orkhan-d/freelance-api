@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserProfileResource;
+use App\Models\Tag;
 use App\Models\User;
-use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -15,6 +15,7 @@ class UserProfileController extends Controller
         $data = $request->all();
         $v = validator($data, [
             "description"=>'nullable|string',
+            'tags' => 'array',
             'tags.*'=>'nullable|string'
         ]);
 
@@ -28,7 +29,13 @@ class UserProfileController extends Controller
             'description'=>$data['description'],
         ]);
 
-        $profile->tags()->sync($data['tags']);
+        $tagsIds = [];
+        foreach(request('tags') as $tagName) {
+            $tag= Tag::create(['name' => $tagName]);
+            $tagsIds[] = $tag->id;
+        }
+
+        $profile->tags()->sync($tagsIds);
 
         return response()->json([
             'status'=>'success'

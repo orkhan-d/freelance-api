@@ -17,7 +17,7 @@ class UserProfileResource extends JsonResource
         return [
             'avatar' => $this->avatar,
             'description' => $this->description,
-            'tags' => $this->tags,
+            'tags' => $this->tags->pluck('name'),
         ];
     }
 }
