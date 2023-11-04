@@ -11,7 +11,7 @@ class Service extends Model
 
     public function tags()
     {
-        return $this->BelongsToMany(tags::class, 'service_tags', 'service_id', 'tag_id');
+        return $this->BelongsToMany(tag::class, 'service_tags', 'service_id', 'tag_id');
     }
 
     public function photos()

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserProfile extends Model
@@ -11,6 +10,6 @@ class UserProfile extends Model
 
     public function tags()
     {
-        return $this->BelongsToMany(tags::class, 'usertags', 'user_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, 'profile_tags', 'profile_id', 'tag_id');
     }
 }

@@ -1,17 +1,12 @@
 <?php
 
 use App\Http\Middleware\AuthCheck;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserProfileController;
 use \App\Http\Controllers\ServiceController;
 use \App\Http\Controllers\ServiceReviewController;
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
