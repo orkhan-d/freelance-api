@@ -22,6 +22,8 @@ Route::middleware(AuthCheck::class) -> group(
             ->missing(fn() => response()->error('Not found', 404));
         Route::post('/auth/profile/avatar', [UserProfileController::class, 'updateAvatar'])
             ->missing(fn() => response()->error('Not found', 404));
+        Route::get('/services', [ServiceController::class, 'index']);
+        Route::get('/auth/services', [ServiceController::class, 'authIndex']);
         Route::post('/services', [ServiceController::class, 'create']);
         Route::post('/services/{service:id}/reviews', [ServiceReviewController::class, 'create'])
             ->missing(fn() => response()->error('Not found', 404));;

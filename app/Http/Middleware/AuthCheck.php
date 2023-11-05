@@ -23,7 +23,7 @@ class AuthCheck
         //dd($user);
 
         if (!$user) {
-            return response()->error('Login failed', 403);
+            return response()->error('Login failed', 401);
         }
 
         Auth::login($user);

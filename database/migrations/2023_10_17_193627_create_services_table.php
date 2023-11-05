@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->string('title');
             $table->string('description');
-            $table->integer('datesCount');
             $table->float('price');
+            $table->unsignedBigInteger('date_from');
+            $table->unsignedBigInteger('date_to');
             $table->timestamps();
         });
     }
