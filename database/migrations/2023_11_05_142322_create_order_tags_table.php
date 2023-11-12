@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('order_tags', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('lastName');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('token')->nullable();
-            $table->foreignId('role_id')->constrained('roles');
+            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('tag_id')->constrained('tags')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('order_tags');
     }
 };

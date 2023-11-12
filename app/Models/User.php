@@ -22,4 +22,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Service::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(ServiceReview::class);
+    }
 }

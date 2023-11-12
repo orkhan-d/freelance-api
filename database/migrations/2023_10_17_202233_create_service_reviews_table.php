@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('service_reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_id')->constrained('services');
-            $table->foreignId('user_id')->constrained('users');
-            $table->string("message");
+            $table->foreignId('service_id')->constrained('services')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->longText("message");
             $table->float("stars");
             $table->timestamps();
         });

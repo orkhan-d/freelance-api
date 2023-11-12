@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ServiceFullResource;
 use App\Http\Resources\ServiceLightResource;
 use App\Models\Service;
 use App\Models\ServicePhoto;
@@ -82,5 +83,16 @@ class ServiceController extends Controller
     public function authIndex()
     {
         return response()->json(ServiceLightResource::collection(auth()->user()->services));
+    }
+
+    public function show(Service $service)
+    {
+        return response()->json(new ServiceFullResource($service));
+    }
+
+    public function getFreelancer(Service $service)
+    {
+
+        return response()->json(collect($service->user)->merge(['avatar' => $service->user->profile->avatar]));
     }
 }

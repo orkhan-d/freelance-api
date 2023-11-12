@@ -14,10 +14,15 @@ class UserProfileResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $profile = $this->profile;
         return [
-            'avatar' => $this->avatar,
-            'description' => $this->description,
-            'tags' => $this->tags->pluck('name'),
+            'avatar' => $profile->avatar,
+            'description' => $profile->description,
+            'tags' => $profile->tags->pluck('name'),
+            'name' => $this->name,
+            'email' => $this->email,
+            'lastName' => $this->surname,
+            'userId' => $this->id,
         ];
     }
 }

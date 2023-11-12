@@ -62,7 +62,7 @@ class UserProfileController extends Controller
             $s = Str::random(10);
             $filename = $s . '.' .request()->file('avatar')->getClientOriginalExtension();
             request()->file('avatar')->move(public_path('uploads'), $filename);
-            $url = 'public/uploads/' . $filename;
+            $url = '/public/uploads/' . $filename;
             $user->profile->update([
                 'avatar' => $url
             ]);
@@ -75,6 +75,6 @@ class UserProfileController extends Controller
 
     public function get(User $user)
     {
-        return response()->json(UserProfileResource::make($user->profile));
+        return response()->json(UserProfileResource::make($user));
     }
 }

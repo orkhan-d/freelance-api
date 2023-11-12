@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use App\Models\Service;
 use App\Models\ServiceReview;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class ServiceReviewController extends Controller
         $data = $request->all();
         $v = validator($data, [
             'message'=>'required|string|min:3',
-            'stars'=>'required|gte:1.0|lte:5.0'
+            'stars'=>'required|gte:0.0|lte:5.0'
         ]);
 
         if($v->fails()) {
@@ -37,5 +38,10 @@ class ServiceReviewController extends Controller
             'message'=>$review->message,
             'stars'=>$review->stars,
         ], 201);
+    }
+
+    public function getComments(Service $service)
+    {
+        return response()->json(CommentResource::collection($service->reviews->sortByDesc('created_at')));
     }
 }
